@@ -42,6 +42,7 @@ class Board
   end
 
   def move(start, end_pos)
+    raise "no piece at start position" if self[start].nil?
     raise "in check!" if self[start].move_into_check?(start, end_pos)
 
     raise "Invalid Move" unless self[start].moves.include?(end_pos)
@@ -57,7 +58,7 @@ class Board
     self[end_pos].position = end_pos #tells piece it's new position
   end
 
-  def in_check?(color)
+  def in_check?(color) #is color in check? am I in check?
     king = find_king(color)
     opponents_pieces(color).each do |opponent|
       return true if opponent.moves.include?(king.position)
@@ -66,9 +67,24 @@ class Board
     false
   end
 
+  def check_mate?(color) #is color in check?
+    # return false unless in_check?(color)
+    own_pieces(color).each do |piece|
+      return false if piece.moves.size > 0
+    end
+
+    true
+  end
+
+  def own_pieces(color)
+    grid.flatten.compact.select { |piece| piece.color == color }
+  end
+
   def opponents_pieces(color)
     grid.flatten.compact.select { |piece| piece.color != color }
   end
+
+
 
   def find_king(color)
     king = nil
@@ -88,7 +104,8 @@ class Board
   end
 
   def render
-    @grid.each do |row|
+    @grid.each_with_index do |row, index|
+      print "#{[8,7,6,5,4,3,2,1][index]} "
       row.each do |piece|
         if piece
           print piece.char
@@ -99,18 +116,11 @@ class Board
       end
       puts
     end
+      puts "  A B C D E F G H"
     nil
   end
 end
 
-
-a = Board.new
-a.move(Vector[1,2], Vector[3,2])
-a.move(Vector[0,3], Vector[3,0])
-a.move(Vector[6,3], Vector[5,3])
-
-a.render
-p Board.deep_dup(a)[Vector[6,2]].moves
 
 
 

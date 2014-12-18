@@ -3,12 +3,12 @@ class Piece
   attr_reader :color, :board
 
   def self.diagonals
-    diagonals = [[-1, -1], [-1, 1], [1, -1], [1, 1]]
+    diagonals = [ [-1, -1], [-1, 1], [1, -1], [1, 1] ]
     diagonals.map {|move| Vector.elements(move)}
   end
 
   def self.orthogonals
-    orthogonals = [[-1, 0], [0, -1], [0, 1], [1, 0]]
+    orthogonals = [ [-1, 0], [0, -1], [0, 1], [1, 0] ]
     orthogonals.map {|move| Vector.elements(move)}
   end
 
